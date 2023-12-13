@@ -4,6 +4,7 @@ import com.pdx.model.entity.Banner;
 import com.pdx.model.vo.UpdateBannerVo;
 import com.pdx.response.Result;
 import com.pdx.utils.PageParams;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
  * @author IT 派同学
  * @since 2023-12-12
  */
+@Api(tags = "轮播图模块相关接口")
 @RestController
 @RequestMapping("/pdx/banner")
 public class BannerController {

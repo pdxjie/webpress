@@ -7,6 +7,7 @@ import com.pdx.model.vo.ArticleUpdateVo;
 import com.pdx.model.vo.QueryArticleVo;
 import com.pdx.model.vo.RestoreArticleVo;
 import com.pdx.response.Result;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import javax.websocket.server.PathParam;
  * @author IT 派同学
  * @since 2023-12-12
  */
+@Api(tags = "文章模块相关接口")
 @RestController
 @RequestMapping("/pdx/article")
 public class ArticleController {

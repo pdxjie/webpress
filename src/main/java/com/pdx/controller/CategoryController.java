@@ -3,6 +3,7 @@ package com.pdx.controller;
 import com.pdx.model.vo.CategoryVo;
 import com.pdx.model.vo.QueryCatePageVo;
 import com.pdx.response.Result;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author IT 派同学
  * @since 2023-12-12
  */
+@Api(tags = "分类模块相关接口")
 @RestController
 @RequestMapping("/pdx/category")
 public class CategoryController {
