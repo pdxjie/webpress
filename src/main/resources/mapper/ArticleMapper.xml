@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pdx.mapper.ArticleMapper">
+
+    <update id="increViewCount">
+        update web_article set view_count = view_count + 1 where id = #{id}
+    </update>
+    <update id="removeArticleWithLogic">
+        update web_article set is_deleted = 1 where id = #{id}
+    </update>
+    <select id="selectCategoryIdsByArticleId" resultType="java.lang.String">
+        select category_id from web_article where id = #{id} and is_deleted = 0
+    </select>
+    <select id="selectNextOneId" resultType="java.lang.String">
+        SELECT
+            m.id
+        FROM
+            (
+                SELECT
+                    a.id,
+                    (@rownum1 := @rownum1 + 1) AS rownum
+                FROM
+                    web_article a,
+                    (SELECT @rownum1 := 0) b
+                WHERE category_id = #{categoryId}
+                AND is_deleted = 0
+            ) m
+                ,
+            (
+                SELECT
+                    c.rownum
+                FROM
+                    (
+                        SELECT
+                            a.id,
+                            (@rownum2 := @rownum2 + 1) AS rownum
+                        FROM
+                            web_article a,
+                            (SELECT @rownum2 := 0) b
+                        WHERE category_id = #{categoryId}
+                        AND is_deleted = 0
+                    ) c
+                WHERE
+                    c.id = #{id}
+            ) n
+        WHERE
+            m.rownum > n.rownum
+            LIMIT 1
+    </select>
+    <select id="selectPreviousId" resultType="java.lang.String">
+        SELECT
+            m.id
+        FROM
+            (
+                SELECT
+                    a.id,
+                    (@rownum1 := @rownum1 + 1) AS rownum
+                FROM
+                    c_interview_questions a,
+                    (SELECT @rownum1 := 0) b
+                WHERE category_id = #{categoryId}
+                AND is_deleted = 0
+            ) m
+                ,
+            (
+                SELECT
+                    c.rownum
+                FROM
+                    (
+                        SELECT
+                            a.id,
+                            (@rownum2 := @rownum2 + 1) AS rownum
+                        FROM
+                            c_interview_questions a,
+                            (SELECT @rownum2 := 0) b
+                        WHERE category_id = #{categoryId}
+                        AND is_deleted = 0
+                    ) c
+                WHERE
+                    c.id = #{interviewQuestionId}
+            ) n
+        WHERE
+            m.rownum &lt; n.rownum
+            LIMIT 1
+    </select>
+</mapper>

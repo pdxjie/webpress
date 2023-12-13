@@ -1,0 +1,89 @@
+package ${package.Controller};
+
+import ${package.Entity}.${entity};
+import com.pdx.response.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+import org.springframework.web.bind.annotation.RequestMapping;
+import ${package.Service}.${table.serviceName};
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+        @Autowired
+        private ${table.serviceName} ${table.entityPath}Service;
+
+        /**
+        * 列表
+        */
+        @RequestMapping("/list")
+        public Result<?> list(@RequestParam Map<String, Object> params){
+            return Result.success(${table.entityPath}Service.list());
+        }
+
+        /**
+        * 信息
+        */
+        @RequestMapping("/info/{id}")
+        public Result<?> info(@PathVariable("id") String id){
+            return Result.success(${table.entityPath}Service.getById(id));
+        }
+
+        /**
+        * 保存
+        */
+        @RequestMapping("/save")
+        public Result<?> save(@RequestBody ${entity} entity){
+            return Result.success(${table.entityPath}Service.save(entity));
+        }
+
+        /**
+        * 修改
+        */
+        @RequestMapping("/update")
+        public Result<?> update(@RequestBody ${entity} entity){
+            return Result.success(${table.entityPath}Service.updateById(entity));
+        }
+
+        /**
+        * 删除
+        */
+        @RequestMapping("/{id}")
+        public Result<?> delete(@PathVariable("id") String id){
+            return Result.success(${table.entityPath}Service.removeById(id));
+        }
+
+
+}
+
+#end
