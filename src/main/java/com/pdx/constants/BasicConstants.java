@@ -53,4 +53,7 @@ public interface BasicConstants {
 
     // 上一个
     public static final String PREVIOUS_ONE = "previous";
+
+    // 父级分类的 ID
+    public static final String PARENT_CATE = "0";
 }
