@@ -2,6 +2,7 @@ package com.pdx.controller;
 
 import com.pdx.model.entity.Category;
 import com.pdx.response.Result;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -23,6 +24,10 @@ public class CategoryController {
 
         @Autowired
         private CategoryService categoryService;
+
+        @ApiOperation(value = "分类分页查询")
+        @PostMapping("/page")
+        public Result<?> searchPage() {}
 
 }
 
