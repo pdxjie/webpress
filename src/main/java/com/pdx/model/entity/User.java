@@ -14,7 +14,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author 派同学
@@ -23,7 +23,7 @@ import java.util.Date;
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
-@TableName("c_user")
+@TableName("web_user")
 @ApiModel(value="User对象", description="")
 public class User implements Serializable {
 

@@ -13,7 +13,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author 派同学
@@ -22,7 +22,7 @@ import java.util.Date;
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
-@TableName("c_user_role")
+@TableName("web_user_role")
 @ApiModel(value="UserRole对象", description="")
 public class UserRole implements Serializable {
 

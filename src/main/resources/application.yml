@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/webpress?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
-    password: root233031
+    password: 233031
     type: com.alibaba.druid.pool.DruidDataSource
   # Redis
   redis:
