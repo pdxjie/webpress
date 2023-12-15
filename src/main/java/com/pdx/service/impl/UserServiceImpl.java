@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.xiaoymin.knife4j.core.util.StrUtil;
 import com.pdx.constants.RoleType;
 import com.pdx.model.entity.Role;
 import com.pdx.model.entity.User;
@@ -241,27 +242,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 新增用户
-     * @param user
+     * @param vo
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<?> insertUser(User user) {
-        String userId = UUID.randomUUID().toString();
-        user.setId(userId);
-        user.setAvatar(DEFAULT_AVATAR);
-        user.setNickName("新用户 — " + userId.substring(0,5));
-        user.setCreateTime(new Date());
-        user.setUpdateTime(new Date());
-        String salt = PasswordUtils.getSalt();
-        if (StringUtils.isEmpty(user.getPassword())) {
+    public Result<?> insertUser(OperateUserVo vo) {
+        if (StringUtils.isEmpty(vo.getPassword())) {
             throw new BusinessException(ResponseCode.ERROR_PARAM);
         }
-        String encode = PasswordUtils.encode(user.getPassword(), salt);
-        user.setPassword(encode);
-        user.setSex(2);
-        user.setSalt(salt);
-        user.setStatus(true);
+        String userId = UUID.randomUUID().toString();
+        String salt = PasswordUtils.getSalt();
+        String encode = PasswordUtils.encode(vo.getPassword(), salt);
+        User user = User.builder()
+                .id(userId)
+                .openId(vo.getOpenId())
+                .avatar(DEFAULT_AVATAR)
+                .nickName(vo.getNickName())
+                .salt(salt)
+                .email(vo.getEmail())
+                .remark(StrUtil.isBlank(vo.getRemark()) ? DEFAULT_REMARK : vo.getRemark())
+                .password(encode)
+                .sex(vo.getSex())
+                .status(true)
+                .createTime(new Date())
+                .updateTime(new Date())
+                .address("未知")
+                .build();
         String userRoleId = UUID.randomUUID().toString();
         UserRole userRole = UserRole.builder().roleId(RoleType.USER_KEY).userId(userId).id(userRoleId).createTime(new Date()).updateTime(new Date()).build();
         int index = userRoleMapper.insert(userRole);
@@ -284,37 +291,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 修改用户信息
-     * @param user
+     * @param vo
      * @return
      */
     @Override
-    public Result<?> updateInfo(ModifyUserVo user) {
-        User userInfo = getById(user.getId());
+    public Result<?> updateInfo(OperateUserVo vo) {
+        if (StrUtil.isBlank(vo.getId())) {
+            throw new BusinessException(ResponseCode.ERROR_PARAM);
+        }
+        String encode = "";
+        User userInfo = baseMapper.selectOne(new QueryWrapper<User>().eq("id", vo.getId()).select("salt", "password"));
+        if (StrUtil.isNotBlank(vo.getPassword())) {
+            encode = PasswordUtils.encode(vo.getPassword(), userInfo.getSalt());
+        } else {
+            encode = userInfo.getPassword();
+        }
+        // 封装参数
+        User user = User.builder()
+                .nickName(vo.getNickName())
+                .email(vo.getEmail())
+                .remark(vo.getRemark())
+                .password(encode)
+                .updateTime(new Date())
+                .sex(vo.getSex())
+                .build();
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", user.getId());
-        if (StringUtils.isNotEmpty(user.getNickName())) {
-            wrapper.set("nick_name", user.getNickName());
-        } else {
-            String default_username = "默认用户" + user.getId().substring(0, 5);
-            wrapper.set("nick_name", default_username);
-        }
-
-        if (StringUtils.isNotEmpty(user.getPhone()) && !user.getPhone().equals(userInfo.getPhone())) {
-            wrapper.set("phone", user.getPhone());
-        }
-
-        if (StringUtils.isNotEmpty(user.getRemark())) {
-            wrapper.set("remark", user.getRemark());
-        } else {
-            wrapper.set("remark", DEFAULT_REMARK);
-        }
-
-        if (StringUtils.isNotEmpty(user.getPassword())) {
-            String encode = PasswordUtils.encode(user.getPassword(), userInfo.getSalt());
-            wrapper.set("password", encode);
-        }
-
-        boolean result = update(wrapper);
+        wrapper.eq("id", vo.getId());
+        boolean result = update(user, wrapper);
         return result ? Result.success() : Result.fail();
     }
 

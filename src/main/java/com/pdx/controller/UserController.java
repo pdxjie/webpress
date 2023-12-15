@@ -5,6 +5,7 @@ import com.pdx.annotation.CheckRoles;
 import com.pdx.constants.RoleType;
 import com.pdx.model.entity.User;
 import com.pdx.model.vo.ModifyUserVo;
+import com.pdx.model.vo.OperateUserVo;
 import com.pdx.model.vo.UpdatePasswordVo;
 import com.pdx.model.vo.UserVo;
 import com.pdx.response.Result;
@@ -44,8 +45,8 @@ public class UserController {
     @PostMapping("/insert")
     @CheckRoles(RoleType.ADMIN)
     @ApiOperation(value = "添加用户")
-    public Result<?> insertUser (@RequestBody User user) {
-        return userService.insertUser(user);
+    public Result<?> insertUser (@RequestBody OperateUserVo vo) {
+        return userService.insertUser(vo);
     }
 
     @GetMapping("/{id}")
@@ -58,8 +59,8 @@ public class UserController {
     @PutMapping("/update")
     @CheckRoles(RoleType.ADMIN)
     @ApiOperation(value = "更新用户基础信息")
-    public Result<?> update (@RequestBody ModifyUserVo user) {
-        return userService.updateInfo(user);
+    public Result<?> update (@RequestBody OperateUserVo vo) {
+        return userService.updateInfo(vo);
     }
 
     @ApiOperation(value = "修改用户头像")

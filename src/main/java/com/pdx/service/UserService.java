@@ -28,11 +28,11 @@ public interface UserService extends IService<User> {
 
     Result<?> queryByCondition(UserVo userVo);
 
-    Result<?> insertUser(User user);
+    Result<?> insertUser(OperateUserVo user);
 
     Result<?> getOneById(String id);
 
-    Result<?> updateInfo(ModifyUserVo user);
+    Result<?> updateInfo(OperateUserVo vo);
 
     Result<?> updateAvatar(String id, MultipartFile file);
 
