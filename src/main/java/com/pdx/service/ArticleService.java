@@ -33,4 +33,6 @@ public interface ArticleService extends IService<Article> {
     Result<?> nextAndPre(String id, String type);
 
     Result<?> restoreArticles(RestoreArticleVo restoreArticleVo);
+
+    Result<?> recommend(String id);
 }

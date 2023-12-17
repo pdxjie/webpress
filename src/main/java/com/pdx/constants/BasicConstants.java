@@ -16,7 +16,7 @@ public interface BasicConstants {
     public static final String CAPTCHA_PREFIX = "email_code";
 
     // 默认头像
-    public static final String DEFAULT_AVATAR = "https://pics0.baidu.com/feed/d1a20cf431adcbefdd06061abb774ad1a2cc9fe4.jpeg?token=15acde01d7585b00cccd65143b10e2eb";
+    public static final String DEFAULT_AVATAR = "https://gd-hbimg.huaban.com/f745f4d45175d04e4c85f8c9f34409b1dd5eeb5612e43-VRcM5M_fw658webp";
 
     // 用户ID
     public static final String USER_ID_KEY = "userId";

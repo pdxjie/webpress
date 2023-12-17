@@ -2,6 +2,7 @@ package com.pdx.mapper;
 
 import com.pdx.model.entity.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CategoryMapper extends BaseMapper<Category> {
 
+    String selectParentName(@Param("pid") String pid);
 }

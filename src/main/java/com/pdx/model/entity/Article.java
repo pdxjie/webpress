@@ -1,5 +1,6 @@
 package com.pdx.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
@@ -12,7 +13,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author IT 派同学
@@ -35,6 +36,9 @@ public class Article implements Serializable {
 
     @ApiModelProperty(value = "文章标题")
     private String title;
+
+    @ApiModelProperty(value = "文章描述")
+    private String description;
 
     @ApiModelProperty(value = "文章封面")
     private String cover;
@@ -67,6 +71,7 @@ public class Article implements Serializable {
     private boolean isRecommend;
 
     @ApiModelProperty(value = "是否点赞")
+    @TableField(exist = false)
     private boolean isLike;
 
     @ApiModelProperty(value = "是否删除")

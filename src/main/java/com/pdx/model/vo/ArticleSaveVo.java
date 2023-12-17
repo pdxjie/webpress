@@ -17,6 +17,9 @@ public class ArticleSaveVo {
     @ApiModelProperty(value = "文章标题")
     private String title;
 
+    @ApiModelProperty(value = "文章描述")
+    private String description;
+
     @ApiModelProperty(value = "文章封面")
     private String cover;
 

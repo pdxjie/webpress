@@ -60,7 +60,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (StrUtil.isNotBlank(vo.getTitle())) {
             wrapper.eq("title", vo.getTitle());
         }
-        if (StrUtil.isNotBlank(String.valueOf(vo.getType()))) {
+        if (null != vo.getType() && StrUtil.isNotBlank(String.valueOf(vo.getType()))) {
             wrapper.eq("type", vo.getType());
         }
         wrapper.orderByDesc("update_time").eq("is_deleted", false);
@@ -70,6 +70,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         records.forEach(article -> {
             ArticlePageDto articlePageDto = new ArticlePageDto();
             BeanUtils.copyProperties(article, articlePageDto);
+            articlePageDto.setArticleTitle(article.getTitle());
             // 查询分类
             String name = categoryMapper.selectOne(new QueryWrapper<Category>()
                                         .eq("id", article.getCategoryId())
@@ -165,5 +166,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", restoreArticleDto);
         return Result.success(resultMap);
+    }
+
+    @Override
+    public Result<?> recommend(String id) {
+        Article article = baseMapper.selectById(id);
+        UpdateWrapper<Article> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", id).set("is_recommend", !article.isRecommend());
+        int result = baseMapper.update(null, updateWrapper);
+        return Objects.equals(result, OPERATE_RESULT) ? Result.success() : Result.fail();
     }
 }

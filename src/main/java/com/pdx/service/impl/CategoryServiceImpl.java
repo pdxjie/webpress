@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.core.util.StrUtil;
 import com.pdx.mapper.ArticleMapper;
+import com.pdx.model.dto.CategoryDto;
 import com.pdx.model.dto.TreeCateDto;
 import com.pdx.model.entity.Article;
 import com.pdx.model.entity.Category;
@@ -48,8 +49,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         }
         wrapper.orderByDesc("update_time");
         Page<Category> categoryPage = baseMapper.selectPage(page, wrapper);
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+        categoryPage.getRecords().forEach(category -> {
+            CategoryDto categoryDto = new CategoryDto();
+            BeanUtils.copyProperties(category, categoryDto);
+            if (!category.getPid().equalsIgnoreCase(PARENT_CATE)) {
+                String parentName = baseMapper.selectParentName(category.getPid());
+                categoryDto.setParentName(parentName);
+            } else {
+                categoryDto.setParentName("无");
+            }
+            categoryDtos.add(categoryDto);
+        });
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("cates", categoryPage.getRecords());
+        resultMap.put("cates", categoryDtos);
         resultMap.put("total", categoryPage.getTotal());
         return Result.success(resultMap);
     }
@@ -119,6 +132,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         }).collect(Collectors.toList());
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("result", collect);
+        return Result.success(resultMap);
+    }
+
+    @Override
+    public Result<?> allParents() {
+        QueryWrapper<Category> wrapper = new QueryWrapper<>();
+        wrapper.eq("pid", PARENT_CATE);
+        List<Category> categories = baseMapper.selectList(wrapper);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("result", categories);
         return Result.success(resultMap);
     }
 

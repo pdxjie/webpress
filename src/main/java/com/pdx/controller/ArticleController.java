@@ -36,50 +36,56 @@ public class ArticleController {
         @CheckRoles(value = RoleType.ADMIN)
         @PostMapping("/pages")
         public Result<?> pages (@RequestBody QueryArticleVo vo) {
-                return articleService.searchPage(vo);
+           return articleService.searchPage(vo);
         }
 
         @PostMapping("/insert")
         @ApiOperation(value = "爆料八股")
         public Result<?> insertInterviewQuestion (@RequestBody ArticleSaveVo vo) {
-                return articleService.saveInterviewQuestion(vo);
+           return articleService.saveInterviewQuestion(vo);
         }
 
         @PostMapping("/update")
         @ApiOperation(value = "修改八股信息")
         public Result<?> updateInterviewQuestion (@RequestBody ArticleUpdateVo vo) {
-                return articleService.updateInterviewQuestion(vo);
+           return articleService.updateInterviewQuestion(vo);
         }
 
         @GetMapping("/{id}")
         @ApiOperation(value = "获取八股详情")
         public Result<?> interviewQuestionInfo (@PathVariable("id") String id) {
-                return articleService.getInterviewQuestionInfo(id);
+           return articleService.getInterviewQuestionInfo(id);
         }
 
         @DeleteMapping("/{id}")
         @ApiOperation(value = "删除八股题库")
         public Result<?> removeById (@PathVariable("id") String id) {
-                return articleService.removeInterviewQuestionById(id);
+           return articleService.removeInterviewQuestionById(id);
         }
 
         @PostMapping("/restore")
         @ApiOperation(value = "回收站恢复")
         public Result<?> restoreArticle(@RequestBody RestoreArticleVo restoreArticleVo) {
-                return articleService.restoreArticles(restoreArticleVo);
+           return articleService.restoreArticles(restoreArticleVo);
+        }
+
+        @GetMapping("/recommend/{id}")
+        @ApiOperation(value = "推荐到首页 ")
+        public Result<?> recommend (@PathVariable("id") String id) {
+           return articleService.recommend(id);
         }
 
         @GetMapping("/preview/{id}")
         @ApiOperation(value = "用户观看")
         public Result<?> preview (@PathVariable("id") String id) {
-                return articleService.preview(id);
+           return articleService.preview(id);
         }
 
 
         @GetMapping("/next")
         @ApiOperation(value = "上一篇 下一篇 八股文")
         public Result<?> nextAndPre (@PathParam("id") String id, @PathParam("type") String type) {
-                return articleService.nextAndPre(id, type);
+           return articleService.nextAndPre(id, type);
         }
 }
 

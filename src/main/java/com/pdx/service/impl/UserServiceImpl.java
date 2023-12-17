@@ -105,6 +105,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!PasswordUtils.matches(salt, loginVo.getPassword(), userOne.getPassword())) {
             throw new BusinessException(ResponseCode.USERINFO_IS_NOT_EXISTS);
         }
+        // 更新用户状态
+        User user = User.builder().isOnline(true).build();
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", userOne.getId());
+        update(user, updateWrapper);
         Map<String, Object> resultMap = resultMap(userOne.getId());
         return Result.success(resultMap);
     }
@@ -251,12 +256,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isEmpty(vo.getPassword())) {
             throw new BusinessException(ResponseCode.ERROR_PARAM);
         }
+        String openId = UUID.randomUUID().toString();
         String userId = UUID.randomUUID().toString();
         String salt = PasswordUtils.getSalt();
         String encode = PasswordUtils.encode(vo.getPassword(), salt);
         User user = User.builder()
                 .id(userId)
-                .openId(vo.getOpenId())
+                .openId(openId)
                 .avatar(DEFAULT_AVATAR)
                 .nickName(vo.getNickName())
                 .salt(salt)
@@ -264,10 +270,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .remark(StrUtil.isBlank(vo.getRemark()) ? DEFAULT_REMARK : vo.getRemark())
                 .password(encode)
                 .sex(vo.getSex())
-                .status(true)
+                .status(false)
                 .createTime(new Date())
                 .updateTime(new Date())
                 .address("未知")
+                .isDeleted(0)
                 .build();
         String userRoleId = UUID.randomUUID().toString();
         UserRole userRole = UserRole.builder().roleId(RoleType.USER_KEY).userId(userId).id(userRoleId).createTime(new Date()).updateTime(new Date()).build();
@@ -300,7 +307,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ResponseCode.ERROR_PARAM);
         }
         String encode = "";
-        User userInfo = baseMapper.selectOne(new QueryWrapper<User>().eq("id", vo.getId()).select("salt", "password"));
+        User userInfo = baseMapper.selectOne(new QueryWrapper<User>().eq("id", vo.getId()));
         if (StrUtil.isNotBlank(vo.getPassword())) {
             encode = PasswordUtils.encode(vo.getPassword(), userInfo.getSalt());
         } else {

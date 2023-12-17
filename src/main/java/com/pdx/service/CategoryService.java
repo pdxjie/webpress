@@ -30,4 +30,6 @@ public interface CategoryService extends IService<Category> {
 
     Result<?> treeCate();
 
+    Result<?> allParents();
+
 }

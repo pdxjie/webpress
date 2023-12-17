@@ -1,7 +1,5 @@
 package com.pdx.model.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -19,13 +17,13 @@ public class ArticlePageDto {
     private String id;
 
     @ApiModelProperty(value = "文章标题")
-    private String title;
+    private String articleTitle;
+
+    @ApiModelProperty(value = "文章描述")
+    private String description;
 
     @ApiModelProperty(value = "文章封面")
     private String cover;
-
-    @ApiModelProperty(value = "文章内容")
-    private String content;
 
     @ApiModelProperty(value = "0 技术分享 1 面试题")
     private Integer type;
@@ -50,7 +48,4 @@ public class ArticlePageDto {
 
     @ApiModelProperty(value = "分类名称")
     private String cateName;
-
-
-
 }

@@ -57,16 +57,22 @@ public class CategoryController {
            return categoryService.removeCateInfo(id);
         }
 
-        @ApiOperation(value = "获取所有的二级分类")
-        @DeleteMapping("/twice")
-        public Result<?> getChildCateInfo() {
-           return categoryService.getChildCateInfo();
-        }
-
         @ApiOperation(value = "获取分类数据")
         @GetMapping("/tree")
         public Result<?> treeCate() {
            return categoryService.treeCate();
+        }
+
+        @ApiOperation(value = "获取所有的二级分类")
+        @GetMapping("/twice")
+        public Result<?> getChildCateInfo() {
+           return categoryService.getChildCateInfo();
+        }
+
+        @ApiOperation(value = "获取所有的父级")
+        @GetMapping("/parent")
+        public Result<?> allParents() {
+           return categoryService.allParents();
         }
 
 }
