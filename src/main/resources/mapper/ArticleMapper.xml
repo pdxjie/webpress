@@ -83,4 +83,7 @@
             m.rownum &lt; n.rownum
             LIMIT 1
     </select>
+    <select id="selectArticleNameAndTypeById" resultType="com.pdx.model.entity.Article">
+        SELECT title, type FROM web_article WHERE id = #{articleId} AND is_deleted = 0
+    </select>
 </mapper>

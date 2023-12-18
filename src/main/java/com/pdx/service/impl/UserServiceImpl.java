@@ -97,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserRole userRole = userRoleMapper.selectOne(new QueryWrapper<UserRole>().eq("user_id", userOne.getId()));
         Role role = roleMapper.selectOne(new QueryWrapper<Role>().eq("id", userRole.getRoleId()));
         // 判断用户是否是管理员
-        if (!Objects.equals(role.getRoleCode(), RoleType.ADMIN_KEY)) {
+        if (!Objects.equals(role.getRoleCode(), RoleType.ADMIN)) {
             throw new BusinessException(ResponseCode.USER_ROLE_IS_MUST_BE_ADMIN);
         }
 

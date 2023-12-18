@@ -30,7 +30,7 @@ public interface BannerService extends IService<Banner> {
      * @param banner Banner 信息
      * @return 操作结果
      */
-    Result<?> addBanner(Banner banner);
+    Result<?> addBanner(UpdateBannerVo banner);
 
     /**
      * 更新 Banner 信息

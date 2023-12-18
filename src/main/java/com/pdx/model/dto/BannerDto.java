@@ -1,14 +1,15 @@
-package com.pdx.model.entity;
+package com.pdx.model.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -19,15 +20,9 @@ import lombok.EqualsAndHashCode;
  * @since 2023-12-12
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@TableName("web_banner")
-@ApiModel(value="Banner对象", description="")
-public class Banner implements Serializable {
-
-    private static final long serialVersionUID=1L;
+public class BannerDto implements Serializable {
 
     @ApiModelProperty(value = "主键 ID")
-    @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
 
     @ApiModelProperty(value = "轮播图封面")
@@ -42,9 +37,9 @@ public class Banner implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
+    @ApiModelProperty(value = "关联文章名称")
+    private String articleName;
 
-    @ApiModelProperty(value = "扩展字段")
-    private String extra;
+    @ApiModelProperty(value = "文章类型")
+    private Integer type;
 }

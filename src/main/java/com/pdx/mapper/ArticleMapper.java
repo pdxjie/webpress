@@ -27,4 +27,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
     String selectNextOneId(@Param("id") String id, @Param("categoryId") String categoryId);
 
     String selectPreviousId(@Param("id") String id, @Param("categoryId") String categoryId);
+
+    Article selectArticleNameAndTypeById(@Param("articleId") String articleId);
 }

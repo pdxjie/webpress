@@ -40,7 +40,7 @@ public class BannerController {
 
         @PostMapping("/add")
         @ApiOperation(value = "添加 Banner —— 管理端")
-        public Result<?> addBanner(@RequestBody Banner banner) {
+        public Result<?> addBanner(@RequestBody UpdateBannerVo banner) {
             return bannerService.addBanner(banner);
         }
 
