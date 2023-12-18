@@ -58,7 +58,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             wrapper.eq("category_id", vo.getCategoryId());
         }
         if (StrUtil.isNotBlank(vo.getTitle())) {
-            wrapper.eq("title", vo.getTitle());
+            wrapper.like("title", vo.getTitle());
         }
         if (null != vo.getType() && StrUtil.isNotBlank(String.valueOf(vo.getType()))) {
             wrapper.eq("type", vo.getType());

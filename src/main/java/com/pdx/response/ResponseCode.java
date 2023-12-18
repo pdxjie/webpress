@@ -40,6 +40,8 @@ public enum ResponseCode {
 
     LESS_THAN_FOUR(214, "批量上传图片不得超过四张"),
 
+    USER_ROLE_IS_MUST_BE_ADMIN(215, "用户角色必须为管理员！"),
+
     USERINFO_IS_NOT_EXISTS(207, "用户名或密码错误，请重试！");
 
 

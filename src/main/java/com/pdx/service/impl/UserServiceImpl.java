@@ -94,6 +94,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (null == userOne) {
             throw new BusinessException(ResponseCode.USERINFO_IS_NOT_EXISTS);
         }
+        UserRole userRole = userRoleMapper.selectOne(new QueryWrapper<UserRole>().eq("user_id", userOne.getId()));
+        Role role = roleMapper.selectOne(new QueryWrapper<Role>().eq("id", userRole.getRoleId()));
+        // 判断用户是否是管理员
+        if (!Objects.equals(role.getRoleCode(), RoleType.ADMIN_KEY)) {
+            throw new BusinessException(ResponseCode.USER_ROLE_IS_MUST_BE_ADMIN);
+        }
 
         // 判断用户是否被禁用
         if (userOne.isStatus()) {
