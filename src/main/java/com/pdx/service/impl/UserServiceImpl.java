@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.javafaker.Faker;
 import com.github.xiaoymin.knife4j.core.util.StrUtil;
 import com.pdx.constants.RoleType;
 import com.pdx.model.entity.Role;
@@ -73,6 +74,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private SecurityUtil securityUtil;
+
+    @Resource
+    private JsoupUtils jsoupUtils;
 
     @Override
     public List<String> currentRoles(String userId) {
@@ -448,6 +452,58 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("url", url);
         return Result.success(resultMap);
+    }
+
+    @Override
+    public Result<?> wxLogin(String openId) {
+        // 判断用户是否存在
+        User userOne = baseMapper.selectOne(new QueryWrapper<User>().eq("open_id", openId));
+        // 如果存在 则执行登录的操作
+        if (null != userOne) {
+            // 判断用户是否被禁用
+            if (userOne.isStatus()) {
+                throw new BusinessException(ResponseCode.USER_FORBIDDEN);
+            }
+            // 更新用户状态
+            User user = User.builder().isOnline(true).build();
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("id", userOne.getId());
+            update(user, updateWrapper);
+            Map<String, Object> resultMap = resultMap(userOne.getId());
+            CurrentUser userInfo = CurrentUser.builder().userId(userOne.getId()).avatar(userOne.getAvatar()).nickName(userOne.getNickName()).isOnline(true).lastLoginTime(new Date()).build();
+            resultMap.put("userInfo", userInfo);
+            return Result.success(resultMap);
+        }
+        // 如果不存在 则执行注册再登录的操作
+        Faker faker = new Faker();
+        String nickName = faker.name().fullName();
+        String avatar = "";
+        String userId = CommonUtils.uuid();
+        try {
+            avatar = jsoupUtils.getWxAvatar();
+        } catch (Exception e) {
+            avatar = DEFAULT_AVATAR;
+        }
+        String salt = PasswordUtils.getSalt();
+        String encode = PasswordUtils.encode(DEFAULT_PASSWORD, salt);
+        User user = User.builder()
+                        .id(userId).remark(DEFAULT_REMARK).email(DEFAULT_EMAIL)
+                        .nickName(nickName).openId(openId).avatar(avatar).password(encode)
+                        .salt(salt).isOnline(true).isDeleted(0).status(false).sex(2)
+                        .updateTime(new Date()).createTime(new Date()).build();
+        int result = baseMapper.insert(user);
+        if (result > 0) {
+            // 初次登录 用户角色是普通用户 USER
+            String userRoleId = UUID.randomUUID().toString();
+            UserRole userRole = UserRole.builder().roleId(RoleType.USER_KEY).userId(userId).id(userRoleId).createTime(new Date()).updateTime(new Date()).build();
+            userRoleMapper.insert(userRole);
+            // 获取用户角色 && 权限
+            Map<String, Object> resultMap = resultMap(userId);
+            CurrentUser userInfo = CurrentUser.builder().userId(user.getId()).avatar(user.getAvatar()).nickName(user.getNickName()).isOnline(true).lastLoginTime(new Date()).build();
+            resultMap.put("userInfo", userInfo);
+            return Result.success(resultMap);
+        }
+        return Result.fail();
     }
 
     /**

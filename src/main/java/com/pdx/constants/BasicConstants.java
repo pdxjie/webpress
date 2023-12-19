@@ -56,4 +56,9 @@ public interface BasicConstants {
 
     // 父级分类的 ID
     public static final String PARENT_CATE = "0";
+
+    // 默认密码
+    public static final String DEFAULT_PASSWORD = "100kusers2016";
+
+    public static final String DEFAULT_EMAIL = "default-email@163.com";
 }

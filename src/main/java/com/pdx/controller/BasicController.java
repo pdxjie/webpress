@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 /*
  * @Author 派同学
@@ -59,5 +60,11 @@ public class BasicController {
     @PostMapping("/batch/upload")
     public Result<?> batchUpload (@RequestParam("file") MultipartFile file) {
         return userService.batchUpload(file);
+    }
+
+    @GetMapping("/wx/login")
+    @ApiOperation(value = "微信登录")
+    public Result<?> wxLogin(@PathParam("openId") String openId) {
+        return userService.wxLogin(openId);
     }
 }
