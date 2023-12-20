@@ -35,4 +35,6 @@ public interface ArticleService extends IService<Article> {
     Result<?> restoreArticles(RestoreArticleVo restoreArticleVo);
 
     Result<?> recommend(String id);
+
+    Result<?> fetchRecommendArticle(String key);
 }

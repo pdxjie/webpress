@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xiaoymin.knife4j.core.util.StrUtil;
 import com.pdx.mapper.CategoryMapper;
+import com.pdx.mapper.DictionaryMapper;
 import com.pdx.mapper.LikeMapper;
 import com.pdx.model.dto.ArticlePageDto;
 import com.pdx.model.dto.RestoreArticleDto;
 import com.pdx.model.entity.Article;
 import com.pdx.mapper.ArticleMapper;
 import com.pdx.model.entity.Category;
+import com.pdx.model.entity.Dictionary;
 import com.pdx.model.entity.Like;
 import com.pdx.model.vo.ArticleSaveVo;
 import com.pdx.model.vo.ArticleUpdateVo;
@@ -48,6 +50,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource
     private SecurityUtil securityUtil;
+
+    @Resource
+    private DictionaryMapper dictionaryMapper;
 
     @Override
     public Result<?> searchPage(QueryArticleVo vo) {
@@ -175,5 +180,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         updateWrapper.eq("id", id).set("is_recommend", !article.isRecommend());
         int result = baseMapper.update(null, updateWrapper);
         return Objects.equals(result, OPERATE_RESULT) ? Result.success() : Result.fail();
+    }
+
+    @Override
+    public Result<?> fetchRecommendArticle(String key) {
+        Dictionary dictionary = dictionaryMapper.selectOne(new QueryWrapper<Dictionary>().eq("dic_key", key));
+        String dicValue = dictionary.getDicValue();
+        Page<Article> page = new Page<>(1, Integer.parseInt(dicValue));
+        QueryWrapper<Article> wrapper = new QueryWrapper<>();
+        wrapper.eq("is_recommend", true).eq("is_deleted", false);
+        Page<Article> articlePage = baseMapper.selectPage(page, wrapper);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("recommends", articlePage.getRecords());
+        return Result.success(resultMap);
     }
 }

@@ -506,6 +506,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return Result.fail();
     }
 
+    @Override
+    public Result<?> updateNickName(UpdateNickNameVo vo) {
+        User user = User.builder().nickName(vo.getNickName()).build();
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("open_id", vo.getOpenId());
+        int result = baseMapper.update(user, updateWrapper);
+        User selectOne = baseMapper.selectOne(new QueryWrapper<User>().eq("open_id", vo.getOpenId()));
+        return Objects.equals(result, OPERATE_RESULT) ? Result.success(selectOne) : Result.fail()                                            ;
+    }
+
     /**
      * 获取用户角色 && 权限 以及 Token信息
      * @param userId

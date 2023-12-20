@@ -4,10 +4,7 @@ package com.pdx.controller;
 import com.pdx.annotation.CheckRoles;
 import com.pdx.constants.RoleType;
 import com.pdx.model.entity.User;
-import com.pdx.model.vo.ModifyUserVo;
-import com.pdx.model.vo.OperateUserVo;
-import com.pdx.model.vo.UpdatePasswordVo;
-import com.pdx.model.vo.UserVo;
+import com.pdx.model.vo.*;
 import com.pdx.response.Result;
 import com.pdx.service.UserService;
 import io.swagger.annotations.Api;
@@ -94,6 +91,12 @@ public class UserController {
     @CheckRoles(value = RoleType.ADMIN)
     public Result<?> setRole (@PathParam("userId") String userId, @PathParam("roleId") String roleId) {
         return userService.setRole(userId, roleId);
+    }
+
+    @PutMapping("/update/nickName")
+    @ApiOperation(value = "修改用户昵称")
+    public Result<?> updateNickName(@RequestBody UpdateNickNameVo vo) {
+        return userService.updateNickName(vo);
     }
 
 }

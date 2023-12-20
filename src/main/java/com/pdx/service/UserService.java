@@ -51,4 +51,6 @@ public interface UserService extends IService<User> {
     Result<?> batchUpload(MultipartFile file);
 
     Result<?> wxLogin(String openId);
+
+    Result<?> updateNickName(UpdateNickNameVo vo);
 }

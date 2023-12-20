@@ -31,7 +31,6 @@ public class ArticleController {
         @Autowired
         private ArticleService articleService;
 
-
         @ApiOperation(value = "条件查询八股题库接口")
         @CheckRoles(value = RoleType.ADMIN)
         @PostMapping("/pages")
@@ -86,6 +85,12 @@ public class ArticleController {
         @ApiOperation(value = "上一篇 下一篇 八股文")
         public Result<?> nextAndPre (@PathParam("id") String id, @PathParam("type") String type) {
            return articleService.nextAndPre(id, type);
+        }
+
+        @GetMapping("/recommend")
+        @ApiOperation(value = "获取推荐到首页的文章")
+        public Result<?> fetchRecommendArticle(@PathParam("key") String key) {
+           return articleService.fetchRecommendArticle(key);
         }
 }
 
